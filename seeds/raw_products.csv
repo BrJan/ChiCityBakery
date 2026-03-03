@@ -1,0 +1,20 @@
+product_id,product_name,category,unit_price,is_active
+PRD-001,Classic Sourdough Loaf,Breads,9.00,true
+PRD-002,Whole Wheat Sandwich Loaf,Breads,7.50,true
+PRD-003,French Baguette,Breads,4.00,true
+PRD-004,Butter Croissant,Pastries,4.50,true
+PRD-005,Almond Croissant,Pastries,5.50,true
+PRD-006,Cinnamon Roll,Pastries,4.00,true
+PRD-007,Chocolate Croissant,Pastries,5.00,true
+PRD-008,Blueberry Muffin,Muffins,3.75,true
+PRD-009,Chocolate Chip Muffin,Muffins,3.75,true
+PRD-010,Bran Muffin,Muffins,3.50,true
+PRD-011,Classic Cheesecake Slice,Cakes,7.50,true
+PRD-012,Chocolate Layer Cake Slice,Cakes,6.50,true
+PRD-013,Carrot Cake Slice,Cakes,6.00,true
+PRD-014,Chocolate Chip Cookie,Cookies,2.50,true
+PRD-015,Snickerdoodle Cookie,Cookies,2.50,true
+PRD-016,Dark Chocolate Brownie,Brownies,3.50,true
+PRD-017,Focaccia,Breads,6.00,true
+PRD-018,Lemon Tart,Pastries,6.50,true
+PRD-019,Seasonal Special,Seasonal,8.00,false

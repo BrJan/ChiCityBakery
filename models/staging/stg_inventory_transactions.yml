@@ -1,0 +1,125 @@
+version: 2
+
+models:
+  - name: stg_inventory_transactions
+    description: >
+      Cleaned inventory movement log. One row per transaction recording a change
+      to an ingredient's stock level. Positive quantity_change = stock added
+      (purchase); negative = stock removed (usage or waste).
+    semantic_model:
+      enabled: true
+    agg_time_dimension: transaction_date
+    data_tests:
+      - dbt_utils.expression_is_true:
+          arguments:
+            expression: >
+              (transaction_type = 'purchase' and quantity_change > 0)
+              or (transaction_type != 'purchase' and quantity_change < 0)
+          description: >
+            Enforces the sign convention: purchases must increase stock
+            (positive quantity_change) and usage/waste must decrease it
+            (negative quantity_change). A violation means a transaction was
+            entered with the wrong sign or the wrong type.
+    columns:
+      - name: transaction_id
+        description: Primary key. Unique identifier for each inventory movement.
+        tests:
+          - unique
+          - not_null
+        entity:
+          type: primary
+          name: transaction
+      - name: transaction_date
+        description: Date the transaction occurred.
+        tests:
+          - not_null
+        granularity: day
+        dimension:
+          type: time
+      - name: ingredient_id
+        description: Foreign key to stg_ingredients. The ingredient being adjusted.
+        tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('stg_ingredients')
+                field: ingredient_id
+        entity:
+          type: foreign
+          name: ingredient
+      - name: transaction_type
+        description: >
+          Type of inventory movement. 'purchase' adds stock received from a supplier;
+          'usage' removes stock consumed during baking; 'waste' removes stock that
+          was spoiled, dropped, or otherwise lost.
+        tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: ['purchase', 'usage', 'waste']
+        dimension:
+          type: categorical
+      - name: quantity_change
+        description: >
+          Amount of stock added or removed in this transaction, expressed in the
+          ingredient's unit_of_measure. Always positive for purchases, always
+          negative for usage and waste. See model-level expression_is_true test.
+        tests:
+          - not_null
+      - name: notes
+        description: Free-text notes describing the reason for the transaction.
+    metrics:
+      - name: transaction_count
+        type: simple
+        label: Transaction Count
+        description: Total number of inventory transactions recorded across all types.
+        agg: count
+        expr: "1"
+
+      - name: quantity_purchased
+        type: simple
+        label: Quantity Purchased
+        description: >
+          Total units received from suppliers, in each ingredient's unit_of_measure.
+          Expressed as a positive number. Filtered to purchase transactions only.
+        agg: sum
+        expr: quantity_change
+        filter: |
+          {{ Dimension('transaction__transaction_type') }} = 'purchase'
+
+      - name: quantity_used
+        type: simple
+        label: Quantity Used in Production
+        description: >
+          Total units consumed during baking, in each ingredient's unit_of_measure.
+          Expressed as a positive number (quantity_change is negated since usage
+          rows carry a negative value). Filtered to usage transactions only.
+        agg: sum
+        expr: -quantity_change
+        filter: |
+          {{ Dimension('transaction__transaction_type') }} = 'usage'
+
+      - name: quantity_wasted
+        type: simple
+        label: Quantity Wasted
+        description: >
+          Total units lost to spoilage, overproofing, or other waste events, in each
+          ingredient's unit_of_measure. Expressed as a positive number
+          (quantity_change is negated). Filtered to waste transactions only.
+        agg: sum
+        expr: -quantity_change
+        filter: |
+          {{ Dimension('transaction__transaction_type') }} = 'waste'
+
+      - name: waste_rate
+        type: derived
+        label: Waste Rate
+        description: >
+          Proportion of total ingredient consumption that is waste rather than
+          productive baking use. Calculated as quantity_wasted / (quantity_used +
+          quantity_wasted). Returns null when no outflow transactions exist in the
+          selected period.
+        expr: "quantity_wasted / (quantity_used + quantity_wasted)"
+        input_metrics:
+          - name: quantity_wasted
+          - name: quantity_used

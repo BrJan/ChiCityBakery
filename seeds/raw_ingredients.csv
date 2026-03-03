@@ -1,0 +1,26 @@
+ingredient_id,ingredient_name,category,unit_of_measure,unit_cost,supplier_id,reorder_point,reorder_quantity
+ING-001,All-Purpose Flour,Dry Goods,lb,0.55,SUP-001,50,200
+ING-002,Bread Flour,Dry Goods,lb,0.65,SUP-001,30,150
+ING-003,Cake Flour,Dry Goods,lb,0.75,SUP-001,20,100
+ING-004,Whole Wheat Flour,Dry Goods,lb,0.70,SUP-001,25,100
+ING-005,Granulated Sugar,Dry Goods,lb,0.60,SUP-004,40,150
+ING-006,Powdered Sugar,Dry Goods,lb,0.75,SUP-004,20,80
+ING-007,Brown Sugar,Dry Goods,lb,0.65,SUP-004,15,75
+ING-008,Unsalted Butter,Dairy,lb,3.20,SUP-002,30,60
+ING-009,Whole Milk,Dairy,gallon,4.50,SUP-002,10,20
+ING-010,Heavy Cream,Dairy,gallon,7.00,SUP-002,5,10
+ING-011,Cream Cheese,Dairy,lb,4.00,SUP-002,10,25
+ING-012,Large Eggs,Dairy,dozen,3.50,SUP-003,20,48
+ING-013,Active Dry Yeast,Leavening,oz,0.45,SUP-006,16,64
+ING-014,Instant Yeast,Leavening,oz,0.50,SUP-006,8,32
+ING-015,Baking Powder,Leavening,oz,0.30,SUP-007,8,32
+ING-016,Baking Soda,Leavening,oz,0.20,SUP-007,8,32
+ING-017,Salt,Seasoning,lb,0.25,SUP-007,10,25
+ING-018,Cinnamon,Seasoning,oz,0.80,SUP-007,8,16
+ING-019,Vanilla Extract,Flavoring,oz,1.50,SUP-007,4,8
+ING-020,Dark Chocolate Chips,Chocolate,lb,5.50,SUP-005,10,25
+ING-021,Semi-Sweet Chocolate,Chocolate,lb,5.00,SUP-005,10,25
+ING-022,Cocoa Powder,Chocolate,lb,4.50,SUP-005,8,20
+ING-023,Almond Flour,Specialty,lb,6.00,SUP-007,5,15
+ING-024,Cream of Tartar,Leavening,oz,0.70,SUP-007,4,8
+ING-025,Olive Oil,Oils,oz,0.40,SUP-007,8,16

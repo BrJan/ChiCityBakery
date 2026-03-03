@@ -1,0 +1,9 @@
+supplier_id,supplier_name,contact_name,phone,email,city,state,active
+SUP-001,Midwest Flour Co.,Diane Kowalski,312-555-0101,diane@midwestflour.com,Chicago,IL,true
+SUP-002,Great Lakes Dairy,Tom Hernandez,773-555-0202,tom@greatlakesdairy.com,Evanston,IL,true
+SUP-003,Prairie Egg Farm,Linda Nowak,847-555-0303,linda@prairieegg.com,Elgin,IL,true
+SUP-004,Sweet Cane Sugar Co.,Marcus Webb,312-555-0404,marcus@sweetcane.com,Chicago,IL,true
+SUP-005,Chicago Chocolate House,Priya Patel,312-555-0505,priya@chicagochoc.com,Chicago,IL,true
+SUP-006,Sunrise Yeast Supply,Frank Russo,630-555-0606,frank@sunriseyeast.com,Naperville,IL,true
+SUP-007,Northside Nut & Spice,Amara Jones,773-555-0707,amara@northsidenut.com,Chicago,IL,true
+SUP-008,Great Plains Packaging,Carlos Rivera,800-555-0808,carlos@greatplainspack.com,Aurora,IL,false

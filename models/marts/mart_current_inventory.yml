@@ -1,0 +1,198 @@
+version: 2
+
+models:
+  - name: mart_current_inventory
+    description: >
+      Current inventory snapshot — one row per ingredient, showing the stock
+      level and value after the most recent transaction on record. This is the
+      source of truth for day-to-day purchasing and production decisions.
+      Ingredients with no transactions will not appear here.
+    data_tests:
+      - dbt_utils.expression_is_true:
+          arguments:
+            expression: "quantity_on_hand >= 0"
+          description: >
+            Stock on hand should never go negative. A violation means a usage
+            or waste transaction was recorded for more stock than was available,
+            suggesting a missing purchase entry or a data entry error.
+    columns:
+      - name: ingredient_id
+        description: Primary key. Unique identifier for each ingredient.
+        tests:
+          - unique
+          - not_null
+      - name: ingredient_name
+        description: Human-readable name of the ingredient (e.g. All-Purpose Flour, Unsalted Butter).
+      - name: category
+        description: Ingredient category grouping (e.g. Dry Goods, Dairy, Leavening, Chocolate).
+      - name: unit_of_measure
+        description: Unit used for all quantity fields in this row (lb, oz, gallon, or dozen).
+      - name: unit_cost
+        description: >
+          Current cost per unit_of_measure in USD, sourced from the ingredient
+          master. Multiply by quantity_on_hand to get inventory_value.
+      - name: supplier_name
+        description: Name of the primary supplier for this ingredient, joined from stg_suppliers.
+      - name: last_transaction_date
+        description: Date of the most recent inventory movement recorded for this ingredient.
+      - name: last_transaction_type
+        description: >
+          Type of the most recent transaction (purchase, usage, or waste).
+          Useful for spotting ingredients whose last activity was a waste event,
+          which may indicate a freshness or storage issue.
+        tests:
+          - accepted_values:
+              arguments:
+                values: ['purchase', 'usage', 'waste']
+      - name: quantity_on_hand
+        description: >
+          Current stock level, in unit_of_measure, after all transactions on record.
+          Derived from the cumulative running balance in int_ingredient_running_balance.
+        tests:
+          - not_null
+      - name: inventory_value
+        description: >
+          Dollar value of stock on hand, calculated as quantity_on_hand × unit_cost
+          and rounded to two decimal places.
+      - name: reorder_point
+        description: >
+          Stock level at which a new purchase order should be placed. When
+          quantity_on_hand falls to or below this value, is_below_reorder_point
+          will be true and the ingredient will appear in mart_low_stock_alerts.
+      - name: reorder_quantity
+        description: Standard quantity to order when restocking — the typical order size from the supplier.
+      - name: is_below_reorder_point
+        description: >
+          True when quantity_on_hand <= reorder_point, signaling that a purchase
+          order should be placed. Use mart_low_stock_alerts for a pre-filtered,
+          prioritized view of these items.
+
+  - name: mart_low_stock_alerts
+    description: >
+      Ingredients currently at or below their reorder point, sorted by urgency
+      (most units below threshold first). Use this daily to prioritize which
+      supplier orders to place. Ingredients above their reorder point do not
+      appear here — query mart_current_inventory for the full picture.
+    data_tests:
+      - dbt_utils.expression_is_true:
+          arguments:
+            expression: "units_below_reorder_point >= 0"
+          description: >
+            All rows in this model are filtered to is_below_reorder_point = true,
+            so reorder_point - quantity_on_hand must always be >= 0. A negative
+            value indicates a filtering bug in mart_current_inventory.
+    columns:
+      - name: ingredient_id
+        description: Unique identifier for the ingredient.
+        tests:
+          - unique
+          - not_null
+      - name: ingredient_name
+        description: Human-readable name of the ingredient needing reorder.
+      - name: category
+        description: Ingredient category (e.g. Dairy, Dry Goods).
+      - name: unit_of_measure
+        description: Unit used for all quantity fields in this row.
+      - name: supplier_name
+        description: Primary supplier to contact for reordering this ingredient.
+      - name: quantity_on_hand
+        description: Current stock level in unit_of_measure.
+      - name: reorder_point
+        description: The threshold at which this item triggered the alert.
+      - name: reorder_quantity
+        description: Recommended quantity to order from the supplier.
+      - name: units_below_reorder_point
+        description: >
+          How far below the reorder threshold the current stock is
+          (reorder_point − quantity_on_hand). Higher values represent
+          greater urgency. Items at exactly the threshold show 0.
+      - name: inventory_value
+        description: Remaining dollar value of stock on hand (quantity_on_hand × unit_cost).
+
+  - name: mart_inventory_daily_snapshot
+    description: >
+      End-of-day inventory balance per ingredient, one row per ingredient per
+      day on which at least one transaction occurred. When multiple transactions
+      happen on the same day for one ingredient, only the balance after the final
+      transaction of that day is recorded.
+      Use this model to chart stock levels over time and identify consumption
+      trends or restocking patterns.
+    semantic_model:
+      enabled: true
+    agg_time_dimension: snapshot_date
+    columns:
+      - name: snapshot_id
+        description: >
+          Surrogate key generated from snapshot_date + ingredient_id using
+          dbt_utils.generate_surrogate_key. Uniquely identifies each
+          ingredient-day combination.
+        tests:
+          - unique
+          - not_null
+        entity:
+          type: primary
+          name: inventory_snapshot
+      - name: snapshot_date
+        description: >
+          The calendar date of this snapshot. Corresponds to the day on which
+          the last recorded transaction for this ingredient occurred.
+        tests:
+          - not_null
+        granularity: day
+        dimension:
+          type: time
+      - name: ingredient_id
+        description: >
+          Unique identifier for the ingredient. Not all ingredients appear on
+          every date — only dates with transactions are present.
+        tests:
+          - not_null
+        entity:
+          type: foreign
+          name: ingredient
+      - name: ingredient_name
+        description: Human-readable name of the ingredient.
+        dimension:
+          type: categorical
+      - name: unit_of_measure
+        description: Unit used for all quantity fields in this row (lb, oz, gallon, dozen).
+        dimension:
+          type: categorical
+      - name: quantity_on_hand
+        description: >
+          Stock level at end of snapshot_date, after all transactions recorded
+          on that day. Derived from the running balance in
+          int_ingredient_running_balance.
+      - name: unit_cost
+        description: Cost per unit_of_measure in USD at time of modeling.
+      - name: inventory_value
+        description: Dollar value of stock on hand at end of snapshot_date (quantity_on_hand × unit_cost).
+    metrics:
+      - name: total_inventory_value
+        type: simple
+        label: Total Inventory Value ($)
+        description: >
+          Sum of inventory_value across all ingredient-day rows in the selected
+          period. Reflects the dollar value of stock on hand at end of each day.
+        agg: sum
+        expr: inventory_value
+
+      - name: total_quantity_on_hand
+        type: simple
+        label: Total Quantity On Hand
+        description: >
+          Sum of quantity_on_hand across ingredients for a given period. Because
+          ingredients use different units of measure, this is most meaningful when
+          grouped by unit_of_measure or filtered to a single ingredient.
+        agg: sum
+        expr: quantity_on_hand
+
+      - name: avg_quantity_on_hand
+        type: simple
+        label: Avg. Quantity On Hand
+        description: >
+          Average end-of-day quantity on hand per ingredient-day row. Useful for
+          understanding typical stock levels over a period without the unit-mixing
+          caveat of total_quantity_on_hand.
+        agg: average
+        expr: quantity_on_hand

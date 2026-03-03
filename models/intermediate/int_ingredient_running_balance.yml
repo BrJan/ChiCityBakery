@@ -1,0 +1,72 @@
+version: 2
+
+models:
+  - name: int_ingredient_running_balance
+    description: >
+      One row per inventory transaction, enriched with a cumulative running
+      balance of quantity_on_hand per ingredient. Records are ordered by
+      transaction_date and transaction_id within each ingredient partition,
+      so quantity_on_hand reflects the stock level immediately after each
+      individual transaction — not just the daily total.
+      Downstream mart models use this to derive both end-of-day snapshots
+      and the latest current balance.
+    columns:
+      - name: transaction_id
+        description: Primary key. Unique identifier for each inventory movement.
+        tests:
+          - unique
+          - not_null
+      - name: transaction_date
+        description: Date the transaction occurred.
+        tests:
+          - not_null
+      - name: ingredient_id
+        description: Foreign key to stg_ingredients.
+        tests:
+          - not_null
+      - name: ingredient_name
+        description: Name of the ingredient, joined from stg_ingredients.
+      - name: unit_of_measure
+        description: Unit in which the ingredient is measured (lb, oz, gallon, dozen), joined from stg_ingredients.
+      - name: unit_cost
+        description: Cost per unit in USD at the time of modeling, joined from stg_ingredients.
+      - name: transaction_type
+        description: Type of inventory movement — purchase, usage, or waste.
+      - name: quantity_change
+        description: >
+          Amount added or removed in this single transaction.
+          Positive for purchases, negative for usage and waste.
+      - name: notes
+        description: Free-text notes from the original transaction record.
+      - name: quantity_on_hand
+        description: >
+          Cumulative running total of quantity_on_hand for this ingredient
+          after applying all transactions up to and including this row
+          (ordered by transaction_date, transaction_id). This is a window
+          function result, not the quantity from the individual transaction.
+          ORDERING ASSUMPTION: transaction_id is sorted lexicographically.
+          This is correct for zero-padded IDs (TXN-0001…TXN-9999) but would
+          produce wrong balances if IDs are plain integers or UUIDs. If the
+          source system changes ID format, add a created_at timestamp column
+          and use that for tie-breaking instead.
+
+unit_tests:
+  - name: running_balance_same_day_ordering
+    description: >
+      Verifies that when a purchase and a usage occur on the same day for the
+      same ingredient, the purchase (TXN-0001) is applied BEFORE the usage
+      (TXN-0002) based on transaction_id sort order. If ordering is reversed,
+      TXN-0001 would show 80 instead of 100, and TXN-0002 would show -20.
+    model: int_ingredient_running_balance
+    given:
+      - input: ref('stg_inventory_transactions')
+        rows:
+          - {transaction_id: 'TXN-0001', transaction_date: '2026-02-01', ingredient_id: 'ING-001', transaction_type: 'purchase', quantity_change: 100.0, notes: 'initial stock'}
+          - {transaction_id: 'TXN-0002', transaction_date: '2026-02-01', ingredient_id: 'ING-001', transaction_type: 'usage', quantity_change: -20.0, notes: 'morning bake'}
+      - input: ref('stg_ingredients')
+        rows:
+          - {ingredient_id: 'ING-001', ingredient_name: 'All-Purpose Flour', category: 'Dry Goods', unit_of_measure: 'lb', unit_cost: 0.55, supplier_id: 'SUP-001', reorder_point: 50, reorder_quantity: 200}
+    expect:
+      rows:
+        - {transaction_id: 'TXN-0001', quantity_on_hand: 100.0}
+        - {transaction_id: 'TXN-0002', quantity_on_hand: 80.0}

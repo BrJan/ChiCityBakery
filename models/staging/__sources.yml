@@ -1,0 +1,22 @@
+version: 2
+
+sources:
+  - name: raw
+    schema: "{{ target.schema }}_raw"
+    description: Raw bakery data loaded from CSV seed files
+    tables:
+      - name: raw_suppliers
+        description: One record per ingredient supplier
+      - name: raw_ingredients
+        description: One record per ingredient stocked by the bakery
+      - name: raw_products
+        description: One record per baked good sold by the bakery
+      - name: raw_inventory_transactions
+        description: One record per inventory movement (purchase, usage, or waste)
+        config:
+          loaded_at_field: transaction_date
+        # TODO: enable source freshness once deployed to dbt Core / dbt Cloud.
+        # Intended thresholds (transactions should be logged every bakery day):
+        #   freshness:
+        #     warn_after: {count: 1, period: day}
+        #     error_after: {count: 3, period: day}

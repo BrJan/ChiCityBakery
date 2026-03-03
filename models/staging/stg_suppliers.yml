@@ -1,0 +1,29 @@
+version: 2
+
+models:
+  - name: stg_suppliers
+    description: Cleaned supplier records. One row per supplier that the bakery sources ingredients from.
+    columns:
+      - name: supplier_id
+        description: Primary key. Unique identifier for each supplier (e.g. SUP-001).
+        tests:
+          - unique
+          - not_null
+      - name: supplier_name
+        description: Business name of the supplier.
+        tests:
+          - not_null
+      - name: contact_name
+        description: Name of the primary contact at the supplier.
+      - name: phone
+        description: Supplier phone number.
+      - name: email
+        description: Supplier email address.
+      - name: city
+        description: City where the supplier is located.
+      - name: state
+        description: State abbreviation (e.g. IL).
+      - name: is_active
+        description: Whether the bakery currently uses this supplier.
+        tests:
+          - not_null

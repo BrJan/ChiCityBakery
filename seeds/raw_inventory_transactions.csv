@@ -1,0 +1,126 @@
+transaction_id,transaction_date,ingredient_id,transaction_type,quantity_change,notes
+TXN-0001,2026-02-01,ING-001,purchase,200,Weekly flour order
+TXN-0002,2026-02-01,ING-002,purchase,150,Weekly flour order
+TXN-0003,2026-02-01,ING-008,purchase,60,Bi-weekly dairy order
+TXN-0004,2026-02-01,ING-012,purchase,48,Weekly egg order
+TXN-0005,2026-02-01,ING-005,purchase,150,Weekly sugar order
+TXN-0006,2026-02-01,ING-013,purchase,64,Monthly yeast order
+TXN-0007,2026-02-02,ING-001,usage,-18,Daily bread production
+TXN-0008,2026-02-02,ING-002,usage,-12,Sourdough and baguette production
+TXN-0009,2026-02-02,ING-008,usage,-8,Croissant and pastry production
+TXN-0010,2026-02-02,ING-012,usage,-6,Pastry and cake production
+TXN-0011,2026-02-02,ING-005,usage,-10,Cinnamon rolls and muffins
+TXN-0012,2026-02-02,ING-013,usage,-4,Bread production
+TXN-0013,2026-02-03,ING-001,usage,-20,Daily bread production
+TXN-0014,2026-02-03,ING-002,usage,-14,Sourdough and baguette production
+TXN-0015,2026-02-03,ING-008,usage,-10,Croissant and pastry production
+TXN-0016,2026-02-03,ING-012,usage,-8,Pastry and cake production
+TXN-0017,2026-02-03,ING-005,usage,-12,Cinnamon rolls and muffins
+TXN-0018,2026-02-03,ING-001,waste,-3,Dough overproofed and discarded
+TXN-0019,2026-02-04,ING-001,usage,-18,Daily bread production
+TXN-0020,2026-02-04,ING-002,usage,-12,Sourdough and baguette production
+TXN-0021,2026-02-04,ING-008,usage,-8,Croissant and pastry production
+TXN-0022,2026-02-04,ING-012,usage,-6,Pastry and cake production
+TXN-0023,2026-02-04,ING-005,usage,-10,Cinnamon rolls and muffins
+TXN-0024,2026-02-05,ING-009,purchase,20,Weekly dairy restocking
+TXN-0025,2026-02-05,ING-010,purchase,10,Weekly dairy restocking
+TXN-0026,2026-02-05,ING-020,purchase,25,Chocolate restocking
+TXN-0027,2026-02-05,ING-001,usage,-22,Heavy weekend production
+TXN-0028,2026-02-05,ING-002,usage,-16,Heavy weekend production
+TXN-0029,2026-02-05,ING-008,usage,-14,Heavy weekend production
+TXN-0030,2026-02-05,ING-012,usage,-10,Heavy weekend production
+TXN-0031,2026-02-05,ING-005,usage,-15,Heavy weekend production
+TXN-0032,2026-02-05,ING-020,usage,-8,Chocolate croissants and brownies
+TXN-0033,2026-02-06,ING-001,usage,-24,Heavy weekend production
+TXN-0034,2026-02-06,ING-002,usage,-18,Heavy weekend production
+TXN-0035,2026-02-06,ING-008,usage,-16,Heavy weekend production
+TXN-0036,2026-02-06,ING-012,usage,-12,Heavy weekend production
+TXN-0037,2026-02-06,ING-005,usage,-18,Heavy weekend production
+TXN-0038,2026-02-06,ING-020,usage,-10,Chocolate items weekend
+TXN-0039,2026-02-07,ING-001,waste,-4,End-of-week stale dough
+TXN-0040,2026-02-07,ING-008,waste,-2,Butter past use-by date
+TXN-0041,2026-02-08,ING-001,purchase,200,Weekly flour order
+TXN-0042,2026-02-08,ING-002,purchase,150,Weekly flour order
+TXN-0043,2026-02-08,ING-008,purchase,60,Bi-weekly dairy order
+TXN-0044,2026-02-08,ING-012,purchase,48,Weekly egg order
+TXN-0045,2026-02-08,ING-005,purchase,150,Weekly sugar order
+TXN-0046,2026-02-09,ING-001,usage,-18,Daily bread production
+TXN-0047,2026-02-09,ING-002,usage,-12,Sourdough and baguette production
+TXN-0048,2026-02-09,ING-008,usage,-8,Croissant and pastry production
+TXN-0049,2026-02-09,ING-012,usage,-6,Pastry and cake production
+TXN-0050,2026-02-09,ING-005,usage,-10,Cinnamon rolls and muffins
+TXN-0051,2026-02-10,ING-001,usage,-20,Daily bread production
+TXN-0052,2026-02-10,ING-002,usage,-14,Sourdough production
+TXN-0053,2026-02-10,ING-008,usage,-10,Croissant production
+TXN-0054,2026-02-10,ING-012,usage,-8,Pastry production
+TXN-0055,2026-02-10,ING-009,usage,-3,Milk-based recipes
+TXN-0056,2026-02-11,ING-001,usage,-18,Daily bread production
+TXN-0057,2026-02-11,ING-002,usage,-12,Bread production
+TXN-0058,2026-02-11,ING-008,usage,-8,Pastry production
+TXN-0059,2026-02-12,ING-009,purchase,20,Restocking dairy
+TXN-0060,2026-02-12,ING-010,purchase,10,Restocking cream
+TXN-0061,2026-02-12,ING-011,purchase,25,Cream cheese for cheesecake
+TXN-0062,2026-02-12,ING-001,usage,-22,Heavy midweek production
+TXN-0063,2026-02-12,ING-002,usage,-16,Bread production
+TXN-0064,2026-02-12,ING-008,usage,-14,Pastry and croissant production
+TXN-0065,2026-02-12,ING-012,usage,-10,Production
+TXN-0066,2026-02-12,ING-011,usage,-5,Cheesecake baking
+TXN-0067,2026-02-13,ING-001,usage,-20,Production
+TXN-0068,2026-02-13,ING-002,usage,-14,Production
+TXN-0069,2026-02-13,ING-008,usage,-10,Production
+TXN-0070,2026-02-13,ING-012,usage,-8,Production
+TXN-0071,2026-02-14,ING-001,usage,-28,Valentine's Day production surge
+TXN-0072,2026-02-14,ING-002,usage,-20,Valentine's Day production surge
+TXN-0073,2026-02-14,ING-008,usage,-22,Valentine's Day pastry surge
+TXN-0074,2026-02-14,ING-012,usage,-16,Valentine's Day pastry surge
+TXN-0075,2026-02-14,ING-005,usage,-24,Valentine's Day sweets
+TXN-0076,2026-02-14,ING-020,usage,-18,Valentine's Day chocolates
+TXN-0077,2026-02-14,ING-022,usage,-12,Chocolate cakes
+TXN-0078,2026-02-14,ING-010,usage,-6,Cream-based desserts
+TXN-0079,2026-02-15,ING-001,purchase,200,Emergency restocking after Valentine's Day
+TXN-0080,2026-02-15,ING-008,purchase,60,Emergency restocking
+TXN-0081,2026-02-15,ING-020,purchase,25,Chocolate restocking
+TXN-0082,2026-02-15,ING-005,purchase,150,Sugar restocking
+TXN-0083,2026-02-15,ING-001,usage,-20,Production
+TXN-0084,2026-02-15,ING-002,usage,-14,Production
+TXN-0085,2026-02-15,ING-008,usage,-10,Production
+TXN-0086,2026-02-16,ING-001,usage,-18,Production
+TXN-0087,2026-02-16,ING-002,usage,-12,Production
+TXN-0088,2026-02-16,ING-008,usage,-8,Production
+TXN-0089,2026-02-17,ING-001,usage,-20,Production
+TXN-0090,2026-02-17,ING-002,usage,-14,Production
+TXN-0091,2026-02-18,ING-001,usage,-22,Weekend production
+TXN-0092,2026-02-18,ING-002,usage,-16,Weekend production
+TXN-0093,2026-02-18,ING-008,usage,-14,Weekend production
+TXN-0094,2026-02-18,ING-012,usage,-10,Weekend production
+TXN-0095,2026-02-18,ING-005,usage,-16,Weekend production
+TXN-0096,2026-02-19,ING-001,usage,-24,Weekend production
+TXN-0097,2026-02-19,ING-002,usage,-18,Weekend production
+TXN-0098,2026-02-19,ING-008,usage,-16,Weekend production
+TXN-0099,2026-02-19,ING-012,usage,-12,Weekend production
+TXN-0100,2026-02-20,ING-001,waste,-2,Spoilage
+TXN-0101,2026-02-22,ING-001,purchase,200,Weekly flour order
+TXN-0102,2026-02-22,ING-002,purchase,150,Weekly flour order
+TXN-0103,2026-02-22,ING-008,purchase,60,Bi-weekly dairy order
+TXN-0104,2026-02-22,ING-012,purchase,48,Weekly egg order
+TXN-0105,2026-02-22,ING-005,purchase,150,Weekly sugar order
+TXN-0106,2026-02-23,ING-001,usage,-18,Production
+TXN-0107,2026-02-23,ING-002,usage,-12,Production
+TXN-0108,2026-02-23,ING-008,usage,-8,Production
+TXN-0109,2026-02-24,ING-001,usage,-20,Production
+TXN-0110,2026-02-24,ING-002,usage,-14,Production
+TXN-0111,2026-02-24,ING-008,usage,-10,Production
+TXN-0112,2026-02-25,ING-001,usage,-18,Production
+TXN-0113,2026-02-25,ING-002,usage,-12,Production
+TXN-0114,2026-02-26,ING-001,usage,-20,Production
+TXN-0115,2026-02-26,ING-002,usage,-14,Production
+TXN-0116,2026-02-27,ING-009,purchase,20,Dairy restocking
+TXN-0117,2026-02-27,ING-022,purchase,20,Cocoa powder restocking
+TXN-0118,2026-02-27,ING-001,usage,-22,Weekend production
+TXN-0119,2026-02-27,ING-002,usage,-16,Weekend production
+TXN-0120,2026-02-27,ING-008,usage,-14,Weekend production
+TXN-0121,2026-02-28,ING-001,usage,-24,Weekend production
+TXN-0122,2026-02-28,ING-002,usage,-18,Weekend production
+TXN-0123,2026-02-28,ING-008,usage,-16,Weekend production
+TXN-0124,2026-02-28,ING-012,usage,-12,Weekend production
+TXN-0125,2026-02-28,ING-005,usage,-18,Weekend production

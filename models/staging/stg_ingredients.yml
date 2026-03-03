@@ -1,0 +1,74 @@
+version: 2
+
+models:
+  - name: stg_ingredients
+    description: Cleaned ingredient master data. One row per ingredient stocked by the bakery.
+    semantic_model:
+      enabled: true
+    columns:
+      - name: ingredient_id
+        description: Primary key. Unique identifier for each ingredient (e.g. ING-001).
+        tests:
+          - unique
+          - not_null
+        entity:
+          type: primary
+          name: ingredient
+      - name: ingredient_name
+        description: Human-readable name of the ingredient.
+        tests:
+          - not_null
+      - name: category
+        description: >
+          Ingredient category used to group related items.
+          Valid values: Chocolate, Dairy, Dry Goods, Flavoring, Leavening, Oils, Seasoning, Specialty.
+        tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: ['Chocolate', 'Dairy', 'Dry Goods', 'Flavoring', 'Leavening', 'Oils', 'Seasoning', 'Specialty']
+        dimension:
+          type: categorical
+      - name: unit_of_measure
+        description: Unit in which the ingredient is measured and ordered (e.g. lb, oz, gallon, dozen).
+        tests:
+          - not_null
+        dimension:
+          type: categorical
+      - name: unit_cost
+        description: Cost per unit of measure in USD as of the last supplier price update.
+        tests:
+          - not_null
+          - dbt_utils.accepted_range:
+              arguments:
+                min_value: 0
+                inclusive: false
+      - name: supplier_id
+        description: Foreign key to stg_suppliers. Identifies the primary supplier for this ingredient.
+        tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('stg_suppliers')
+                field: supplier_id
+        entity:
+          type: foreign
+          name: supplier
+      - name: reorder_point
+        description: >
+          Stock level threshold that triggers a reorder. When quantity_on_hand falls
+          to or below this value, a purchase order should be placed to avoid running out.
+        tests:
+          - not_null
+          - dbt_utils.accepted_range:
+              arguments:
+                min_value: 0
+                inclusive: false
+      - name: reorder_quantity
+        description: Standard quantity to order when restocking this ingredient.
+        tests:
+          - not_null
+          - dbt_utils.accepted_range:
+              arguments:
+                min_value: 0
+                inclusive: false
